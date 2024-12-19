@@ -82,6 +82,19 @@ public abstract class Alojamiento {
 
     public void confirmarHabitaciones(List<Habitacion> habitaciones, Date startDate, Date endDate,
                                       int adultos, int ninos, int habitacionesRequeridas) {
+        validarParametros(habitaciones, startDate, endDate, adultos, ninos, habitacionesRequeridas);
+
+        List<Habitacion> habitacionesDisponibles = filtrarHabitacionesDisponibles(habitaciones, adultos, ninos);
+
+        if (habitacionesDisponibles.size() < habitacionesRequeridas) {
+            throw new IllegalStateException("No hay suficientes habitaciones disponibles para las fechas dadas.");
+        }
+
+        mostrarHabitacionesConfirmadas(habitacionesDisponibles, habitacionesRequeridas);
+    }
+
+    private void validarParametros(List<Habitacion> habitaciones, Date startDate, Date endDate,
+                                   int adultos, int ninos, int habitacionesRequeridas) {
         if (habitaciones == null || habitaciones.isEmpty()) {
             throw new IllegalArgumentException("La lista de habitaciones no puede estar vacía.");
         }
@@ -91,20 +104,21 @@ public abstract class Alojamiento {
         if (adultos < 0 || ninos < 0 || habitacionesRequeridas <= 0) {
             throw new IllegalArgumentException("Los valores de adultos, niños o habitaciones son inválidos.");
         }
+    }
 
-        List<Habitacion> habitacionesDisponibles = new ArrayList<>();
+    private List<Habitacion> filtrarHabitacionesDisponibles(List<Habitacion> habitaciones, int adultos, int ninos) {
+        List<Habitacion> disponibles = new ArrayList<>();
         for (Habitacion habitacion : habitaciones) {
             if (habitacion.isDisponibilidad() &&
                     habitacion.getCantidadAdultos() >= adultos &&
                     habitacion.getCantidadMenores() >= ninos) {
-                habitacionesDisponibles.add(habitacion);
+                disponibles.add(habitacion);
             }
         }
+        return disponibles;
+    }
 
-        if (habitacionesDisponibles.size() < habitacionesRequeridas) {
-            throw new IllegalStateException("No hay suficientes habitaciones disponibles para las fechas dadas.");
-        }
-
+    private void mostrarHabitacionesConfirmadas(List<Habitacion> habitacionesDisponibles, int habitacionesRequeridas) {
         System.out.println("Habitaciones confirmadas:");
         for (int i = 0; i < habitacionesRequeridas; i++) {
             Habitacion habitacion = habitacionesDisponibles.get(i);
@@ -114,6 +128,13 @@ public abstract class Alojamiento {
             System.out.println("  Capacidad: " + habitacion.getCantidadAdultos() + " adultos, " + habitacion.getCantidadMenores() + " niños");
             System.out.println("  -----------------------------");
         }
+    }
+
+    public void mostrarInformacion() {
+        System.out.println("Nombre del alojamiento: " + nombre);
+        System.out.println("Ciudad: " + ciudad);
+        System.out.println("Calificación: " + calificacion);
+        System.out.println("Precio base: $" + precioBase);
     }
 
     @Override
@@ -131,40 +152,6 @@ public abstract class Alojamiento {
             sb.append(habitacion).append("\n");
         }
         return sb.toString();
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-
-    public String getCiudad() {
-        return ciudad;
-    }
-
-    public String getTipoAlojamiento() {
-        return tipoAlojamiento;
-    }
-
-    public List<Habitacion> getHabitaciones() {
-        return habitaciones;
-    }
-
-    public Double getPrecioBase() {
-        return precioBase;
-    }
-
-    public Date getFechaInicio() {
-        return fechaInicio;
-    }
-
-
-    public Date getFechaFin() {
-        return fechaFin;
-    }
-
-    public Float getCalificacion() {
-        return calificacion;
     }
 
 }

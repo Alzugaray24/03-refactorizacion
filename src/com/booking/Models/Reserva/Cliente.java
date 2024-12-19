@@ -29,4 +29,17 @@ public class Cliente {
     public String getNombreCompleto() {
         return nombre + " " + apellido;
     }
+
+    public void setNumeroDeTelefono(String numeroDeTelefono) {
+        this.numeroDeTelefono = numeroDeTelefono;
+    }
+
+
+    public LocalDate getFechaDeNacimiento() {
+        return fechaDeNacimiento;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
 }

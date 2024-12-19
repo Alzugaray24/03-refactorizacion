@@ -23,8 +23,6 @@ public class ReservaImplementacion implements IReserva {
 
     @Override
     public void crearReserva(List<ReservaData> reservaData, Integer cantidadHabitaciones, Date horaDeLlegada) {
-        System.out.println("Se creó una reserva.");
-
         for (ReservaData reserva : reservaData) {
             Alojamiento alojamiento = (Alojamiento) reserva.getAlojamiento();
 
@@ -33,50 +31,55 @@ public class ReservaImplementacion implements IReserva {
     }
 
     @Override
-    public void eliminarReserva() {
-
+    public void eliminarReserva(List<ReservaData> reservaData, String correo, Date fechaNacimiento) {
+        reservaData.removeIf(reserva ->
+                reserva.getUsuario().getCorreo().equalsIgnoreCase(correo) &&
+                        reserva.getUsuario().getFechaDeNacimiento().equals(fechaNacimiento)
+        );
+        System.out.println("Reserva eliminada con éxito, si existía.");
     }
 
     @Override
-    public void modificarReserva() {
-
+    public void consultarReserva(List<ReservaData> reservaData, String correo, Date fechaNacimiento) {
+        for (ReservaData reserva : reservaData) {
+            if (reserva.getUsuario().getCorreo().equalsIgnoreCase(correo) &&
+                    reserva.getUsuario().getFechaDeNacimiento().equals(fechaNacimiento)) {
+                System.out.println("Datos de la reserva encontrada:");
+                reserva.mostrarInformacionReserva();
+                return;
+            }
+        }
+        System.out.println("No se encontró una reserva con los datos proporcionados.");
     }
 
     @Override
-    public void consultarReserva() {
+    public void modificarReserva(List<ReservaData> reservaData, String correo, Date fechaNacimiento) {
+        for (ReservaData reserva : reservaData) {
+            if (reserva.getUsuario().getCorreo().equalsIgnoreCase(correo) &&
+                    reserva.getUsuario().getFechaDeNacimiento().equals(fechaNacimiento)) {
+                System.out.println("Datos actuales de la reserva:");
+                reserva.mostrarInformacionReserva();
 
+                reserva.getUsuario().setNumeroDeTelefono("Nuevo número de teléfono");
+                System.out.println("Reserva modificada con éxito.");
+                return;
+            }
+        }
+        System.out.println("No se encontró una reserva con los datos proporcionados.");
     }
 
     @Override
     public void buscarAlojamiento(List<Alojamiento> alojamientos) {
         List<String> tiposPermitidos = List.of("Hotel", "Apartamento", "Finca", "DiaDeSol");
+
         for (Alojamiento alojamiento : alojamientos) {
-            if (tiposPermitidos.contains(alojamiento.getTipoAlojamiento())) {
-                if (alojamiento.getTipoAlojamiento().equals("DiaDeSol")) {
-                    DiaDeSol diaDeSol = (DiaDeSol) alojamiento;
-                    diaDeSol.mostrarInformacionDiaDeSol();
-
-                    System.out.println(" ------------------------------------------------------------ ");
-                } else {
-                    String nombre = alojamiento.getNombre();
-                    Float calificacion = alojamiento.getCalificacion();
-                    Double precioPorNoche = alojamiento.getPrecioBase();
-                    long diasEstadia = (alojamiento.getFechaFin().getTime() - alojamiento.getFechaInicio().getTime()) / (1000 * 60 * 60 * 24);
-                    Double precioCalculado = precioPorNoche * diasEstadia;
-
-                    String precioTotal = alojamiento.calcularPrecioTotal(alojamiento.getHabitaciones().size());
-
-                    System.out.println("Nombre del hotel: " + nombre);
-                    System.out.println("Calificación: " + calificacion);
-                    System.out.println("Precio por noche: $" + precioPorNoche);
-                    System.out.println("Precio calculado por " + diasEstadia + " días de estadía: $" + precioCalculado);
-                    System.out.println(precioTotal);
-
-                    System.out.println(" ------------------------------------------------------------ ");
-                }
-            } else {
+            if (!tiposPermitidos.contains(alojamiento.getTipoAlojamiento())) {
                 throw new IllegalArgumentException("Tipo de alojamiento no permitido: " + alojamiento.getTipoAlojamiento());
             }
+
+            System.out.println("Información del alojamiento:");
+            alojamiento.mostrarInformacion();
+            System.out.println("------------------------------------------------------------");
         }
     }
 

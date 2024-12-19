@@ -9,11 +9,11 @@ public interface IReserva {
 
     public void crearReserva(List<ReservaData> reservaData, Integer cantidadHabitaciones, Date horaDeLlegada);
 
-    public void eliminarReserva();
+    public void eliminarReserva(List<ReservaData> reservaData, String correo, Date fechaNacimiento);
 
-    public void modificarReserva();
+    public void modificarReserva(List<ReservaData> reservaData, String correo, Date fechaNacimiento);
 
-    public void consultarReserva();
+    public void consultarReserva(List<ReservaData> reservaData, String correo, Date fechaNacimiento);
 
     public void buscarAlojamiento(List<Alojamiento> alojamientos);
 }

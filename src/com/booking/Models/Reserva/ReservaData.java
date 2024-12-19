@@ -26,4 +26,8 @@ public class ReservaData<T> {
         System.out.println("Cliente: " + usuario.getNombreCompleto());
         System.out.println("Detalles del Alojamiento: " + alojamiento.toString());
     }
+
+    public Cliente getUsuario() {
+        return usuario;
+    }
 }
